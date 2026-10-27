@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Case Study: Multi-Stage Security Regression Tracker – Ramandeep Singh</title>
+<meta name="description" content="Case study: a cloud-native platform on AWS that detects security regressions across dev, staging and prod by diffing SAST and pentest findings.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#EEF1F5; --surface:#FFFFFF; --ink:#18202D; --muted:#566173;
+  --line:#C8D0DC; --accent:#2343C4; --accent-soft:#DCE3FB;
+  --bad:#B42318; --bad-soft:#FDE7E5; --good:#17703A; --good-soft:#DFF3E6;
+  color-scheme: light;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#10151F; --surface:#171E2B; --ink:#E5E9F0; --muted:#9AA5B6;
+    --line:#2C3647; --accent:#8FA5FF; --accent-soft:#222C4A;
+    --bad:#FF9B90; --bad-soft:#3A1F22; --good:#7FDCA0; --good-soft:#18301F;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#10151F; --surface:#171E2B; --ink:#E5E9F0; --muted:#9AA5B6;
+  --line:#2C3647; --accent:#8FA5FF; --accent-soft:#222C4A;
+  --bad:#FF9B90; --bad-soft:#3A1F22; --good:#7FDCA0; --good-soft:#18301F;
+  color-scheme: dark;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{
+  margin:0;background:var(--bg);color:var(--ink);
+  font-family:"Schibsted Grotesk", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-size:1.0625rem;line-height:1.65;-webkit-font-smoothing:antialiased;
+}
+a{color:var(--accent);text-underline-offset:.18em;text-decoration-thickness:1px}
+a:hover{text-decoration-thickness:2px}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:2px}
+.wrap{max-width:52rem;margin:0 auto;padding:0 1.5rem}
+.top{display:flex;justify-content:space-between;align-items:center;padding:1.5rem 0;gap:1rem;flex-wrap:wrap}
+.top a{font-weight:600;text-decoration:none}
+.top .me{color:var(--ink)}
+header.hero{padding:2.5rem 0 2rem}
+.kicker{font-size:.875rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);margin:0 0 .75rem}
+h1{font-size:clamp(2.1rem,5.5vw,3.4rem);line-height:1.05;letter-spacing:-.03em;margin:0 0 1rem;font-weight:800}
+.lede{font-size:clamp(1.1rem,2vw,1.3rem);color:var(--muted);margin:0 0 1.5rem;max-width:42rem}
+.meta{display:grid;grid-template-columns:repeat(auto-fit,minmax(11rem,1fr));gap:1rem 2rem;margin:0;padding:1.25rem 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.meta dt{font-size:.8125rem;color:var(--muted);font-weight:500}
+.meta dd{margin:.1rem 0 0;font-weight:600}
+section{padding:2.75rem 0 0}
+h2{font-size:clamp(1.45rem,3vw,1.85rem);letter-spacing:-.02em;line-height:1.2;margin:0 0 1rem}
+p{margin:0 0 1rem;max-width:44rem}
+ul{padding-left:1.2rem;margin:0 0 1rem;max-width:44rem}
+li{margin:.35rem 0}
+li::marker{color:var(--accent)}
+.callout{background:var(--accent-soft);border-left:4px solid var(--accent);padding:1rem 1.25rem;border-radius:0 8px 8px 0;margin:1.25rem 0;max-width:44rem}
+.callout p{margin:0}
+.table{overflow-x:auto;margin:1rem 0 1.25rem;border:1px solid var(--line);border-radius:8px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:34rem;font-size:.95rem}
+th,td{text-align:left;padding:.7rem .9rem;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:.8125rem;color:var(--muted);font-weight:600}
+tr:last-child td{border-bottom:0}
+.tag{display:inline-block;padding:.05rem .5rem;border-radius:4px;font-size:.8125rem;font-weight:600}
+.tag.bad{background:var(--bad-soft);color:var(--bad)}
+.tag.good{background:var(--good-soft);color:var(--good)}
+
+/* architecture flow */
+.flow{display:grid;gap:.6rem;margin:1.25rem 0;max-width:44rem}
+.node{background:var(--surface);border:1.5px solid var(--line);border-radius:8px;padding:.75rem 1rem}
+.node b{display:block}
+.node span{font-size:.875rem;color:var(--muted)}
+.node.key{border-color:var(--accent);background:var(--accent-soft)}
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:.6rem}
+.arrow{text-align:center;color:var(--accent);font-weight:700;line-height:1}
+@media (max-width:560px){.pair{grid-template-columns:1fr}}
+
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(9rem,1fr));gap:1rem;margin:1.25rem 0}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:1rem}
+.stat b{display:block;font-size:1.9rem;letter-spacing:-.02em;line-height:1.1;font-variant-numeric:tabular-nums}
+.stat span{font-size:.875rem;color:var(--muted)}
+footer{margin-top:3.5rem;padding:2rem 0 3rem;border-top:1px solid var(--line);color:var(--muted);font-size:.9rem;display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+</style>
+</head>
+<body>
+<div class="wrap">
+<nav class="top" aria-label="Site">
+  <a class="me" href="../">← Ramandeep Singh</a>
+  <a href="https://github.com/amritasingh17304/cs6620" target="_blank" rel="noopener">View code on GitHub</a>
+</nav>
+
+<main>
+<header class="hero">
+  <p class="kicker">Case study · Cloud security</p>
+  <h1>Multi-Stage Security Regression Tracker</h1>
+  <p class="lede">A cloud-native platform on AWS that catches the “we fixed it in staging, but it’s back in prod” class of bug by diffing static and dynamic security scans across environments.</p>
+  <dl class="meta">
+    <div><dt>Context</dt><dd>CS6620 Cloud Computing, Northeastern</dd></div>
+    <div><dt>Team</dt><dd>Amritasingh Thakur, Ramandeep Singh</dd></div>
+    <div><dt>My role</dt><dd>Built the SAST pipeline</dd></div>
+    <div><dt>Stack</dt><dd>AWS Lambda, Fargate, DynamoDB, Terraform</dd></div>
+  </dl>
+</header>
+
+<section>
+  <h2>The problem</h2>
+  <p>Applications move through environments: dev, then staging, then production. A security fix made in one environment doesn’t always reach the next. A bad merge, a config rollback, or a rushed hotfix can quietly undo it, and a vulnerability that was already fixed reappears in production.</p>
+  <p>These <strong>security regressions</strong> are dangerous because they’re silent. Existing scanners look at one codebase or one deployment at a time, so none of them notices that a fix was lost between environments.</p>
+  <div class="table">
+    <table>
+      <thead><tr><th>Tool category</th><th>What it does</th><th>Limitation</th></tr></thead>
+      <tbody>
+        <tr><td>SAST scanners (SonarQube, Snyk)</td><td>Scan source code for vulnerable patterns</td><td>One codebase at a time</td></tr>
+        <tr><td>Pentest tools (OWASP ZAP, Burp)</td><td>Probe one running deployment</td><td>One deployment at a time</td></tr>
+        <tr><td><strong>This platform</strong></td><td>Runs both across dev, staging and prod</td><td><strong>Compares across environments and tools</strong></td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section>
+  <h2>The solution</h2>
+  <p>The platform scans all three environments through two lenses, stores every finding in one table, and diffs adjacent environments for each tool:</p>
+  <ul>
+    <li><strong>SAST (static):</strong> reads source code for vulnerable patterns such as hardcoded secrets.</li>
+    <li><strong>Pentest (dynamic):</strong> probes the running app over HTTP for weaknesses such as missing security headers or rate limiting.</li>
+  </ul>
+  <div class="callout"><p><strong>Key idea:</strong> any finding present in a later environment but absent in the earlier one is a regression. HIGH-severity regressions email the team automatically.</p></div>
+</section>
+
+<section>
+  <h2>Architecture</h2>
+  <div class="flow" role="img" aria-label="Architecture: environments feed a SAST pipeline on Lambda and a pentest pipeline on Fargate; both write to DynamoDB; a diff engine Lambda compares environments and sends SNS email alerts.">
+    <div class="node"><b>3 environments</b><span>dev · staging · prod</span></div>
+    <div class="arrow" aria-hidden="true">↓</div>
+    <div class="pair">
+      <div class="node key"><b>SAST pipeline</b><span>API Gateway → AWS Lambda · scans source code</span></div>
+      <div class="node"><b>Pentest pipeline</b><span>Docker on ECS Fargate · probes the running app</span></div>
+    </div>
+    <div class="arrow" aria-hidden="true">↓</div>
+    <div class="node"><b>Shared DynamoDB table: ScanResults</b><span>PK jobId · SK env#scanType (both tools write here)</span></div>
+    <div class="arrow" aria-hidden="true">↓</div>
+    <div class="node"><b>Diff Engine (Lambda) · GET /regressions</b><span>compares dev → staging → prod per tool</span></div>
+    <div class="arrow" aria-hidden="true">↓</div>
+    <div class="node"><b>SNS email alert</b><span>on any HIGH-severity regression</span></div>
+  </div>
+  <p>Everything is Infrastructure as Code in <strong>Terraform</strong> (three stacks: SAST, pentest, integration) with one-command build and teardown, monitored through CloudWatch Logs and Container Insights.</p>
+</section>
+
+<section>
+  <h2>My part: the SAST pipeline</h2>
+  <p>I built the static-analysis side as a serverless pipeline: source code is posted to <strong>API Gateway</strong>, a <strong>Lambda</strong> function scans it for vulnerable patterns, and the findings are written to the shared DynamoDB table under <code>&lt;env&gt;#SAST</code>. Because static scanning is fast and stateless, Lambda fits it well: it scales automatically and costs nothing when idle. Amritasingh built the pentest pipeline on Fargate, and the shared table schema is what joined our two pipelines into one platform.</p>
+</section>
+
+<section>
+  <h2>Key design decisions</h2>
+  <ul>
+    <li><strong>Match compute to the workload.</strong> Static scans are quick and stateless, so they run on Lambda. Dynamic scans are container-based, network-heavy and longer-running, so they run on Fargate, avoiding Lambda’s 15-minute limit.</li>
+    <li><strong>One shared data contract.</strong> A parameterized <code>scanType</code> sort key lets SAST and pentest results live in one table and be compared directly.</li>
+    <li><strong>Environments through configuration.</strong> SAST scans three source versions, and the pentest runs one Docker image toggled by environment variables (<code>SECURE_HEADERS</code>, <code>RATE_LIMIT</code>).</li>
+    <li><strong>No public exposure.</strong> The vulnerable target and the scanner run in the same Fargate task and talk over localhost, with no load balancer.</li>
+    <li><strong>Near-zero idle cost.</strong> Lambda, DynamoDB, API Gateway and SNS are serverless, and Fargate tasks run only on demand.</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Results</h2>
+  <div class="stats">
+    <div class="stat"><b>2</b><span>regressions detected</span></div>
+    <div class="stat"><b>7 → 1</b><span>SAST findings, dev to staging</span></div>
+    <div class="stat"><b>9</b><span>AWS services integrated</span></div>
+    <div class="stat"><b>~$0</b><span>cost when idle</span></div>
+  </div>
+  <div class="table">
+    <table>
+      <thead><tr><th>Environment</th><th>SAST findings</th><th>Pentest findings</th></tr></thead>
+      <tbody>
+        <tr><td>dev</td><td>7 (4 HIGH, 3 MEDIUM)</td><td><span class="tag bad">Fail</span> security headers, rate limiting, sensitive data</td></tr>
+        <tr><td>staging</td><td>1 (0 HIGH)</td><td><span class="tag good">Pass</span> all checks</td></tr>
+        <tr><td>prod</td><td>2 (1 HIGH)</td><td><span class="tag bad">Fail</span> security headers again</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Security improved sharply from dev to staging, but production brought two issues back:</p>
+  <ul>
+    <li><strong>Hardcoded secret (SAST, HIGH):</strong> fixed in staging, back in prod. This triggered the SNS email alert automatically.</li>
+    <li><strong>Security headers (pentest, MEDIUM):</strong> passing in staging, failing in prod.</li>
+  </ul>
+  <p>The integrated services were Lambda, ECS/Fargate, ECR, DynamoDB, API Gateway, SNS, CloudWatch, IAM and VPC.</p>
+</section>
+
+<section>
+  <h2>What I learned</h2>
+  <ul>
+    <li><code>localhost</code> inside a container is the container itself, not the host; containers in the same task share it.</li>
+    <li>When to choose Lambda versus Fargate, and how Infrastructure as Code makes a multi-component system repeatable and cheap to run.</li>
+  </ul>
+</section>
+
+<section>
+  <h2>What I’d improve next</h2>
+  <ul>
+    <li>Least-privilege IAM roles per component, instead of the broad lab role</li>
+    <li>Retries and dead-letter handling (Step Functions or SQS) for failed scans</li>
+    <li>A normalized findings schema shared by both tools</li>
+    <li>A dashboard UI and automatic triggering through an EventBridge schedule or a GitHub webhook</li>
+  </ul>
+</section>
+</main>
+
+<footer>
+  <span>Team project by Amritasingh Thakur and Ramandeep Singh.</span>
+  <a href="../">Back to portfolio</a>
+</footer>
+</div>
+</body>
+</html>
