@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ramandeep Singh – Software Engineer</title>
+<meta name="description" content="Ramandeep Singh, backend software engineer with 6 years of experience in Java, Spring Boot and microservices. MS Computer Science student at Northeastern University.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#EEF1F5; --surface:#FFFFFF; --ink:#18202D; --muted:#566173;
+  --line:#C8D0DC; --accent:#2343C4; --accent-soft:#DCE3FB;
+  color-scheme: light;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#10151F; --surface:#171E2B; --ink:#E5E9F0; --muted:#9AA5B6;
+    --line:#2C3647; --accent:#8FA5FF; --accent-soft:#222C4A;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#10151F; --surface:#171E2B; --ink:#E5E9F0; --muted:#9AA5B6;
+  --line:#2C3647; --accent:#8FA5FF; --accent-soft:#222C4A;
+  color-scheme: dark;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px);scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+body{
+  margin:0; background:var(--bg); color:var(--ink);
+  font-family:"Schibsted Grotesk", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-size:1.0625rem; line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+a{color:var(--accent);text-underline-offset:.18em;text-decoration-thickness:1px}
+a:hover{text-decoration-thickness:2px}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:2px}
+.wrap{max-width:62rem;margin:0 auto;padding:0 1.5rem}
+
+/* ---------- header ---------- */
+.top{display:flex;justify-content:space-between;align-items:center;padding:1.5rem 0;gap:1rem;flex-wrap:wrap}
+.top .me{font-weight:700;color:var(--ink);text-decoration:none}
+.top nav{display:flex;gap:1.25rem;flex-wrap:wrap}
+.top nav a{color:var(--muted);text-decoration:none;font-weight:500}
+.top nav a:hover{color:var(--ink)}
+
+/* ---------- hero ---------- */
+.hero{padding:3.5rem 0 2.5rem}
+.hero h1{
+  font-size:clamp(2.6rem,7vw,4.75rem); line-height:1; letter-spacing:-.035em;
+  font-weight:800; margin:0 0 1.25rem; max-width:17ch;
+}
+.hero p.lede{font-size:clamp(1.125rem,2.2vw,1.35rem);line-height:1.5;color:var(--muted);max-width:40rem;margin:0 0 1.75rem}
+.hero p.lede strong{color:var(--ink);font-weight:600}
+.actions{display:flex;gap:.75rem;flex-wrap:wrap}
+.btn{
+  display:inline-block;padding:.7rem 1.15rem;border-radius:6px;font-weight:600;text-decoration:none;
+  border:1.5px solid var(--accent);
+}
+.btn.primary{background:var(--accent);color:var(--bg)}
+.btn.ghost{color:var(--accent)}
+.btn:hover{text-decoration:none;filter:brightness(1.08)}
+
+/* ---------- route (the one memorable element) ---------- */
+.route{margin:3.5rem 0 1rem;padding:0;list-style:none;position:relative;display:grid;grid-template-columns:repeat(6,1fr)}
+.route::before{content:"";position:absolute;left:calc(100%/12);right:calc(100%/12);top:.55rem;height:3px;background:var(--accent);border-radius:2px}
+.route li{position:relative;text-align:center;padding:0 .25rem}
+.route .dot{display:block;width:1.1rem;height:1.1rem;margin:0 auto .8rem;border-radius:50%;background:var(--bg);border:3px solid var(--accent);position:relative}
+.route li:last-child .dot{background:var(--accent);box-shadow:0 0 0 5px var(--accent-soft)}
+.route .city{display:block;font-weight:700;font-size:1.05rem;line-height:1.2}
+.route .what{display:block;color:var(--muted);font-size:.875rem;line-height:1.35;margin-top:.2rem}
+.route .yr{display:block;font-variant-numeric:tabular-nums;color:var(--accent);font-weight:600;font-size:.875rem;margin-top:.25rem}
+.route a{color:inherit;text-decoration:none}
+.route a:hover .city{color:var(--accent)}
+@media (max-width:720px){
+  .route{grid-template-columns:1fr;gap:1.1rem;margin-top:2.5rem}
+  .route::before{left:calc(.55rem - 1.5px);right:auto;top:.6rem;bottom:2.4rem;width:3px;height:auto}
+  .route li{text-align:left;padding:0}
+  .route li a{display:grid;grid-template-columns:1.1rem 1fr;column-gap:1rem}
+  .route .dot{margin:.2rem 0 0;grid-row:1 / span 3}
+}
+
+/* ---------- sections ---------- */
+section{padding:3.5rem 0;border-top:1px solid var(--line)}
+h2{font-size:clamp(1.6rem,3.4vw,2.1rem);letter-spacing:-.02em;line-height:1.15;margin:0 0 2rem;font-weight:700}
+h3{font-size:1.2rem;line-height:1.3;margin:0;font-weight:700}
+.sub{color:var(--muted);margin:.15rem 0 .75rem}
+ul.points{margin:0;padding-left:1.15rem;max-width:44rem}
+ul.points li{margin:.3rem 0}
+ul.points li::marker{color:var(--accent)}
+
+/* experience: a real sequence, so dates sit in their own column */
+.job{display:grid;grid-template-columns:11rem 1fr;gap:1.5rem;padding:1.5rem 0}
+.job + .job{border-top:1px dashed var(--line)}
+.job .when{font-variant-numeric:tabular-nums;color:var(--muted);font-size:.95rem;padding-top:.15rem}
+.job .when b{display:block;color:var(--ink);font-weight:600}
+@media (max-width:720px){.job{grid-template-columns:1fr;gap:.35rem}}
+
+/* projects */
+.projects{display:grid;grid-template-columns:repeat(auto-fit,minmax(18rem,1fr));gap:2.5rem 3rem}
+.project h3{margin-bottom:.35rem}
+.project p{margin:0 0 .6rem;color:var(--muted);max-width:36rem}
+.tags{display:flex;flex-wrap:wrap;gap:.4rem;margin:.6rem 0 0;padding:0;list-style:none}
+.tags li{font-size:.8125rem;padding:.15rem .55rem;border-radius:4px;background:var(--accent-soft);color:var(--ink)}
+.metrics{display:flex;gap:1.75rem;margin:.75rem 0;flex-wrap:wrap}
+.metrics div{font-variant-numeric:tabular-nums}
+.metrics b{display:block;font-size:1.5rem;letter-spacing:-.02em;color:var(--ink)}
+.metrics span{font-size:.85rem;color:var(--muted)}
+
+/* skills */
+.skills{display:grid;grid-template-columns:11rem 1fr;gap:.9rem 1.5rem;margin:0}
+.skills dt{font-weight:600}
+.skills dd{margin:0;color:var(--muted)}
+@media (max-width:720px){.skills{grid-template-columns:1fr;gap:.15rem}.skills dd{margin-bottom:.9rem}}
+
+/* education */
+.edu{display:grid;gap:1.25rem}
+.edu div{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;align-items:baseline}
+.edu .yrs{color:var(--muted);font-variant-numeric:tabular-nums}
+
+/* contact */
+.contact p{max-width:38rem;color:var(--muted);margin:0 0 1.5rem}
+.contact .mail{font-size:clamp(1.3rem,4vw,2.1rem);font-weight:700;letter-spacing:-.02em;word-break:break-all}
+.links{display:flex;gap:1.5rem;flex-wrap:wrap;margin-top:1.5rem;font-weight:600}
+footer{padding:2rem 0 3rem;color:var(--muted);font-size:.875rem;border-top:1px solid var(--line)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="top">
+  <a class="me" href="#">Ramandeep Singh</a>
+  <nav aria-label="Sections">
+    <a href="#experience">Experience</a>
+    <a href="#projects">Projects</a>
+    <a href="#skills">Skills</a>
+    <a href="#contact">Contact</a>
+  </nav>
+</header>
+
+<main>
+<div class="hero">
+  <h1>I build the backend that keeps products running.</h1>
+  <p class="lede"><strong>Software engineer with 6 years of experience</strong> building services and APIs in Java, Spring Boot and microservices, across eCommerce, healthcare and enterprise support. Now an MS Computer Science student at Northeastern University, looking for a software engineering co-op.</p>
+  <div class="actions">
+    <a class="btn primary" href="mailto:Ramandeep2077@gmail.com">Email me</a>
+    <a class="btn ghost" href="https://github.com/Ramandeep2077" target="_blank" rel="noopener">See my GitHub</a>
+  </div>
+
+  <ol class="route" aria-label="Career path">
+    <li><a href="#education"><span class="dot"></span><span class="city">Punjab</span><span class="what">B.Tech, Computer Science</span><span class="yr">2013</span></a></li>
+    <li><a href="#job-roastnow"><span class="dot"></span><span class="city">Delhi</span><span class="what">Java Developer</span><span class="yr">2016</span></a></li>
+    <li><a href="#job-ecw"><span class="dot"></span><span class="city">Bangalore</span><span class="what">Healthcare software</span><span class="yr">2018</span></a></li>
+    <li><a href="#job-trantor"><span class="dot"></span><span class="city">Chandigarh</span><span class="what">eCommerce platform</span><span class="yr">2020</span></a></li>
+    <li><a href="#job-ibm"><span class="dot"></span><span class="city">Dublin</span><span class="what">MS Data Analytics, then IBM</span><span class="yr">2022</span></a></li>
+    <li><a href="#education"><span class="dot"></span><span class="city">Boston</span><span class="what">MS CS, Northeastern</span><span class="yr">2025</span></a></li>
+  </ol>
+</div>
+
+<section id="experience">
+  <h2>Experience</h2>
+
+  <article class="job" id="job-ibm">
+    <div class="when"><b>IBM</b>Mar 2024 – Aug 2025<br>Dublin, Ireland</div>
+    <div>
+      <h3>Software Developer</h3>
+      <ul class="points">
+        <li>Developed and maintained backend services and REST APIs in Java and Spring Boot, with React and Node.js interfaces, supporting SRE and customer support workflows.</li>
+        <li>Designed and integrated new microservices within the support module.</li>
+        <li>Improved reliability through extensive JUnit test coverage and production monitoring, proposing design fixes.</li>
+        <li>Mentored junior engineers through knowledge-transfer sessions and code reviews.</li>
+      </ul>
+    </div>
+  </article>
+
+  <article class="job" id="job-trantor">
+    <div class="when"><b>Trantor</b>Feb 2020 – Dec 2021<br>Chandigarh, India</div>
+    <div>
+      <h3>Software Engineer</h3>
+      <ul class="points">
+        <li>Led development of the promotions module for the Fry’s Electronics eCommerce platform, owning features end to end; the platform was later acquired by Amazon.</li>
+        <li>Introduced a design approach that delivered features 40% faster and improved user satisfaction by 60%.</li>
+        <li>Tested cart-page promotion logic in a multithreaded environment to ensure correctness under concurrent load.</li>
+      </ul>
+    </div>
+  </article>
+
+  <article class="job" id="job-ecw">
+    <div class="when"><b>eClinicalWorks</b>Mar 2018 – May 2019<br>Bangalore, India</div>
+    <div>
+      <h3>Software Specialist</h3>
+      <ul class="points">
+        <li>Built RESTful web services in Java and Spring for an Electronic Medical Records application, improving interoperability with external healthcare systems.</li>
+        <li>Implemented Hibernate persistence for patient records with security controls supporting HIPAA compliance.</li>
+      </ul>
+    </div>
+  </article>
+
+  <article class="job" id="job-roastnow">
+    <div class="when"><b>RoastNowTech</b>Sept 2016 – Dec 2017<br>Delhi, India</div>
+    <div>
+      <h3>Java Developer</h3>
+      <ul class="points">
+        <li>Built Java web applications with Struts, Spring, Hibernate and MySQL for a multi-industry product platform.</li>
+      </ul>
+    </div>
+  </article>
+</section>
+
+<section id="projects">
+  <h2>Projects</h2>
+  <div class="projects">
+    <article class="project">
+      <h3>RootSignal: AI incident-response copilot</h3>
+      <p>Groups alert storms into one incident, sends LangGraph agents to investigate logs, metrics and deploys through MCP tools, and proposes runbook-backed fixes that a human must approve. Runs on local LLMs for $0.</p>
+      <div class="metrics" aria-label="Evaluation results">
+        <div><b>95%</b><span>alert noise cut</span></div>
+        <div><b>100%</b><span>unsafe actions blocked</span></div>
+      </div>
+      <a href="https://rootsignalapp.vercel.app" target="_blank" rel="noopener">Live demo</a> · <a href="https://github.com/Ramandeep2077/rootsignal" target="_blank" rel="noopener">GitHub</a>
+      <ul class="tags"><li>Java</li><li>Spring Boot</li><li>Kafka</li><li>LangGraph</li><li>MCP</li><li>Ollama</li><li>Next.js</li><li>Terraform</li></ul>
+    </article>
+
+    <article class="project">
+      <h3>Multi-Stage Security Regression Tracker</h3>
+      <p>A team project on AWS that catches security fixes lost between dev, staging and prod by diffing static (SAST) and dynamic (pentest) scans, with email alerts on HIGH-severity regressions. I built the serverless SAST pipeline.</p>
+      <a href="security-regression-tracker/">Read the case study</a> · <a href="https://github.com/amritasingh17304/cs6620" target="_blank" rel="noopener">GitHub</a>
+      <ul class="tags"><li>AWS Lambda</li><li>ECS Fargate</li><li>DynamoDB</li><li>SNS</li><li>Terraform</li></ul>
+    </article>
+
+    <article class="project">
+      <h3>Hybrid text summarization</h3>
+      <p>My MS thesis at National College of Ireland. A model that pairs extractive summarization (TextRank) with an abstractive LSTM sequence-to-sequence network with attention, tested on news datasets. I also explored BERT and GPT-2 for better summaries.</p>
+      <div class="metrics" aria-label="ROUGE scores">
+        <div><b>0.40</b><span>ROUGE-1</span></div>
+        <div><b>0.09</b><span>ROUGE-2</span></div>
+        <div><b>0.39</b><span>ROUGE-L</span></div>
+      </div>
+      <a href="https://norma.ncirl.ie/6640/" target="_blank" rel="noopener">Read the thesis</a> · <a href="https://github.com/Ramandeep2077/Text-Summarization" target="_blank" rel="noopener">GitHub</a>
+      <ul class="tags"><li>Python</li><li>NLP</li><li>LSTM</li><li>TextRank</li><li>BERT</li></ul>
+    </article>
+
+    <article class="project">
+      <h3>Promotions engine for Fry’s Electronics</h3>
+      <p>The promotions module on the cart page of FrysWeb, a large electronics retailer’s eCommerce site. I owned features from design through release and tested promotion logic under concurrent load.</p>
+      <ul class="tags"><li>Java</li><li>Spring Boot</li><li>Hibernate</li><li>Angular</li><li>Microservices</li><li>MySQL</li></ul>
+    </article>
+
+    <article class="project">
+      <h3>Electronic Medical Records services</h3>
+      <p>REST services for eClinicalWorks’ EMR tool, which doctors and nurses use to record patient history, diagnoses, prescriptions and treatment plans, with data handling built to meet HIPAA requirements.</p>
+      <ul class="tags"><li>Java</li><li>Spring</li><li>Hibernate</li><li>REST</li><li>MySQL</li></ul>
+    </article>
+  </div>
+</section>
+
+<section id="skills">
+  <h2>Skills</h2>
+  <dl class="skills">
+    <dt>Languages</dt><dd>Java, Python, JavaScript, SQL, R, HTML and CSS</dd>
+    <dt>Frameworks</dt><dd>Spring Boot, Spring Batch, Hibernate, React, Angular, Node.js, Struts 2</dd>
+    <dt>Systems and data</dt><dd>Microservices, REST APIs, Kafka, distributed systems, MySQL, PostgreSQL</dd>
+    <dt>Tools and cloud</dt><dd>Git, Docker, AWS, Maven, Gradle, JUnit, Selenium</dd>
+    <dt>Practices</dt><dd>Object-oriented design, design patterns, SOLID principles, code review, testing</dd>
+  </dl>
+</section>
+
+<section id="education">
+  <h2>Education</h2>
+  <div class="edu">
+    <div><span><b>MS in Computer Science</b>, Northeastern University, Boston</span><span class="yrs">Sept 2025 – May 2027</span></div>
+    <div><span><b>MS in Data Analytics</b>, National College of Ireland, Dublin</span><span class="yrs">2022 – 2023</span></div>
+    <div><span><b>B.Tech in Computer Science</b>, Punjab Technical University</span><span class="yrs">2013 – 2016</span></div>
+  </div>
+</section>
+
+<section id="contact" class="contact">
+  <h2>Let’s talk</h2>
+  <p>I’m looking for a software engineering co-op where I can work on backend systems and keep learning. The fastest way to reach me is email.</p>
+  <a class="mail" href="mailto:Ramandeep2077@gmail.com">Ramandeep2077@gmail.com</a>
+  <div class="links">
+    <a href="https://www.linkedin.com/in/ramandeep-singh-110b97105" target="_blank" rel="noopener">LinkedIn</a>
+    <a href="https://github.com/Ramandeep2077" target="_blank" rel="noopener">GitHub</a>
+    <a href="https://leetcode.com/ramandeep2077/" target="_blank" rel="noopener">LeetCode</a>
+    <a href="tel:+18573976915">+1 857-397-6915</a>
+  </div>
+</section>
+</main>
+
+<footer>Ramandeep Singh, Boston, MA</footer>
+</div>
+</body>
+</html>
